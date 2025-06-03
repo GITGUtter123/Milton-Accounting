@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
+    // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -11,9 +12,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     hamburger.addEventListener('click', () => {
+        const isActive = navMenu.classList.contains('active');
         hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
         body.classList.toggle('no-scroll');
+
+        if (!isActive) {
+            navMenu.classList.add('active');
+            // Animate in each nav link with a delay
+            navLinks.forEach(link => {
+                link.style.opacity = '1';
+                link.style.transform = 'translateX(0)';
+            });
+        } else {
+            navMenu.classList.remove('active');
+            // Reset link animations when closing
+            navLinks.forEach(link => {
+                link.style.opacity = '0';
+                link.style.transform = 'translateX(20px)';
+            });
+        }
     });
 
     // Close mobile menu when clicking links
@@ -23,6 +40,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
                 body.classList.remove('no-scroll');
+                // Reset link animations
+                navLinks.forEach(link => {
+                    link.style.opacity = '0';
+                    link.style.transform = 'translateX(20px)';
+                });
             }
         });
     });
@@ -33,6 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
             body.classList.remove('no-scroll');
+            // Reset link animations
+            navLinks.forEach(link => {
+                link.style.opacity = '0';
+                link.style.transform = 'translateX(20px)';
+            });
         }
     });
 
@@ -234,6 +261,47 @@ document.addEventListener('DOMContentLoaded', function() {
                     behavior: 'smooth'
                 });
             }
+        });
+    });
+
+    // FAQ Accordion functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            // Close all other FAQ items
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                }
+            });
+
+            // Toggle current item
+            if (isActive) {
+                item.classList.remove('active');
+            } else {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // Animate FAQ items on scroll
+    gsap.utils.toArray('.faq-item').forEach((item, i) => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 85%',
+                toggleActions: 'play none none none'
+            },
+            y: 30,
+            opacity: 0,
+            duration: 0.6,
+            delay: i * 0.1,
+            ease: 'power3.out'
         });
     });
 
