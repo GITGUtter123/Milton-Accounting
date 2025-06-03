@@ -1,8 +1,7 @@
-// app.js
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
     const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
+    const navMenu = document.getElementById('navMenu');
 
     hamburger.addEventListener('click', function() {
         hamburger.classList.toggle('active');
@@ -17,29 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
         const navbar = document.querySelector('.navbar');
         if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-            navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            navbar.classList.add('scrolled');
         } else {
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.boxShadow = 'none';
+            navbar.classList.remove('scrolled');
         }
     });
 
@@ -65,53 +48,172 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Form submitted:', formObject);
     });
 
-    // Animate elements on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    // Initialize GSAP animations
+    gsap.registerPlugin(ScrollTrigger);
 
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+    // Animate hero section
+    gsap.from('.hero-title', {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.hero-subtitle', {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        delay: 0.2,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.hero-buttons', {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        delay: 0.4,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.hero-img', {
+        duration: 1,
+        x: 100,
+        opacity: 0,
+        /* This is fine here as it's the starting state */
+        delay: 0.6,
+        ease: 'power3.out'
+    });
+
+    // Animate service cards
+    gsap.utils.toArray('.service-card').forEach((card, i) => {
+        gsap.from(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            delay: i * 0.1,
+            ease: 'power3.out'
+        });
+    });
+
+    // Animate about section
+    gsap.from('.about-image', {
+        scrollTrigger: {
+            trigger: '.about',
+            start: 'top 70%',
+            toggleActions: 'play none none none'
+        },
+        x: -100,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.about-text', {
+        scrollTrigger: {
+            trigger: '.about',
+            start: 'top 70%',
+            toggleActions: 'play none none none'
+        },
+        x: 100,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+
+    // Animate gallery items
+    gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            delay: i * 0.1,
+            ease: 'power3.out'
+        });
+    });
+
+    // Animate testimonials
+    gsap.utils.toArray('.testimonial-card').forEach((card, i) => {
+        gsap.from(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            delay: i * 0.15,
+            ease: 'power3.out'
+        });
+    });
+
+    // Animate contact section
+    gsap.from('.contact-info', {
+        scrollTrigger: {
+            trigger: '.contact',
+            start: 'top 70%',
+            toggleActions: 'play none none none'
+        },
+        x: -50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.contact-form', {
+        scrollTrigger: {
+            trigger: '.contact',
+            start: 'top 70%',
+            toggleActions: 'play none none none'
+        },
+        x: 50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+
+    // Scroll to top button
+    const scrollToTopBtn = document.createElement('button');
+    scrollToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    scrollToTopBtn.className = 'scroll-to-top';
+    document.body.appendChild(scrollToTopBtn);
+
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.classList.add('active');
+        } else {
+            scrollToTopBtn.classList.remove('active');
+        }
+    });
+
+    scrollToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - 80,
+                    behavior: 'smooth'
+                });
             }
-        });
-    }, observerOptions);
-
-    // Observe service cards and about items
-    document.querySelectorAll('.service-card, .about-item, .contact-item').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-
-    // Add loading animation to service cards
-    const serviceCards = document.querySelectorAll('.service-card');
-    serviceCards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-    });
-
-    // Phone number click to call
-    const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-    phoneLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            // Analytics tracking could go here
-            console.log('Phone number clicked');
-        });
-    });
-
-    // Add hover effects to buttons
-    const buttons = document.querySelectorAll('.cta-button, .submit-btn');
-    buttons.forEach(button => {
-        button.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-3px)';
-        });
-
-        button.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
         });
     });
 
@@ -157,192 +259,5 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Add typing effect to hero title
-    const heroTitle = document.querySelector('.hero-title');
-    const titleText = heroTitle.textContent;
-    heroTitle.textContent = '';
-
-    let i = 0;
-
-    function typeWriter() {
-        if (i < titleText.length) {
-            heroTitle.textContent += titleText.charAt(i);
-            i++;
-            setTimeout(typeWriter, 100);
-        }
-    }
-
-    // Start typing effect after a short delay
-    setTimeout(typeWriter, 1000);
-
-    // Add parallax effect to hero section
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const hero = document.querySelector('.hero');
-        const heroShape = document.querySelector('.hero-shape');
-
-        if (hero && heroShape) {
-            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-            heroShape.style.transform = `translateY(${scrolled * 0.3}px)`;
-        }
-    });
-
-    // Add counter animation for statistics (if needed in future)
-    function animateCounter(element, target, duration = 2000) {
-        let start = 0;
-        const increment = target / (duration / 16);
-
-        function updateCounter() {
-            start += increment;
-            if (start < target) {
-                element.textContent = Math.floor(start);
-                requestAnimationFrame(updateCounter);
-            } else {
-                element.textContent = target;
-            }
-        }
-
-        updateCounter();
-    }
-
-    // Add service card click handlers for mobile
-    const serviceCards = document.querySelectorAll('.service-card');
-    serviceCards.forEach(card => {
-        card.addEventListener('click', function() {
-            // Add a subtle animation on mobile tap
-            if (window.innerWidth <= 768) {
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
-            }
-        });
-    });
-
-    // Lazy loading for images (if any are added later)
-    const images = document.querySelectorAll('img[data-src]');
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.remove('lazy');
-                imageObserver.unobserve(img);
-            }
-        });
-    });
-
-    images.forEach(img => imageObserver.observe(img));
-
-    // Add scroll to top functionality
-    const scrollToTopBtn = document.createElement('button');
-    scrollToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    scrollToTopBtn.className = 'scroll-to-top';
-    scrollToTopBtn.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        background: var(--gradient);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    `;
-
-    document.body.appendChild(scrollToTopBtn);
-
-    // Show/hide scroll to top button
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            scrollToTopBtn.style.opacity = '1';
-            scrollToTopBtn.style.visibility = 'visible';
-        } else {
-            scrollToTopBtn.style.opacity = '0';
-            scrollToTopBtn.style.visibility = 'hidden';
-        }
-    });
-
-    // Scroll to top when button is clicked
-    scrollToTopBtn.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-
-    // Add hover effect to scroll to top button
-    scrollToTopBtn.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-3px) scale(1.1)';
-    });
-
-    scrollToTopBtn.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-
-    // Add keyboard navigation support
-    document.addEventListener('keydown', function(e) {
-        // Press 'C' to focus on contact form
-        if (e.key === 'c' || e.key === 'C') {
-            if (!e.target.matches('input, textarea, select')) {
-                const contactSection = document.getElementById('contact');
-                contactSection.scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => {
-                    document.getElementById('name').focus();
-                }, 500);
-            }
-        }
-
-        // Press 'S' to focus on services
-        if (e.key === 's' || e.key === 'S') {
-            if (!e.target.matches('input, textarea, select')) {
-                const servicesSection = document.getElementById('services');
-                servicesSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    });
-
-    // Add error handling for form submission
-    window.addEventListener('error', function(e) {
-        console.error('Website error:', e.error);
-    });
-
-    // Performance optimization: Debounce scroll events
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    // Apply debouncing to scroll events
-    const debouncedScrollHandler = debounce(function() {
-        // Scroll-based animations or effects can go here
-    }, 10);
-
-    window.addEventListener('scroll', debouncedScrollHandler);
-
-    // Add accessibility improvements
-    document.querySelectorAll('button, .nav-link, .cta-button').forEach(element => {
-        element.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-            }
-        });
-    });
-
-    // Initialize all animations and effects
     console.log('Milton Accounting website loaded successfully!');
 });
