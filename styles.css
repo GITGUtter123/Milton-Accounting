@@ -665,6 +665,15 @@ body {
     background: rgba(255, 255, 255, 0.25);
 }
 
+
+.service-card:hover .service-icon i{
+    transform: rotateY(180deg) scale(1.1);
+}
+
+i{
+    transition: transform 0.4s ease;
+}
+
 .service-content {
     padding: 30px;
     position: relative;
